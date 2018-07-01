@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    hostname: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: my_app_dev
+    networks:
+      - db
+
+  backend:
+    hostname: backend
+    build:
+      context: my-app-backend
+    depends_on:
+      - postgres
+    ports:
+      - 4000:4000
+    volumes:
+      - './my-app-backend:/app'
+    links:
+      - postgres
+    networks:
+      db:
+        aliases:
+          - postgres
+          - web.service.db
+    
+  frontend:
+    hostname: frontend
+    build:
+      context: my-app-frontend
+    depends_on:
+      - backend
+    ports:
+      - 3000:3000
+    volumes:
+      - './my-app-frontend:/app'
+    links:
+      - backend
+
+networks:
+  db:
