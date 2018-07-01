@@ -1,14 +1,17 @@
 defmodule MyApp.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias MyApp.Accounts.User
+
+  import Comeonin.Bcrypt, only: [hashpwsalt: 1]
 
   schema "users" do
     field(:email, :string)
-    field(:is_admin, :boolean, default: false)
-    field(:name, :string)
-    field(:password, :string, virtual: true)
     field(:password_hash, :string)
-    field(:phone, :string)
+
+    # Virtual fields:
+    field(:password, :string, virtual: true)
+    field(:password_confirmation, :string, virtual: true)
 
     timestamps()
   end
@@ -16,37 +19,19 @@ defmodule MyApp.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :name, :phone, :password, :is_admin])
-    |> validate_required([:email, :name, :phone, :password, :is_admin])
-  end
-
-  @doc false
-  def registration_changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:email, :name, :phone, :password])
-    |> validate_required([:email, :name, :phone, :password])
-    |> validate_changeset
-  end
-
-  @doc false
-  defp validate_changeset(struct) do
-    struct
-    |> validate_length(:email, min: 5, max: 255)
+    |> cast(attrs, [:email, :password, :password_confirmation])
+    |> validate_required([:email, :password, :password_confirmation])
     |> validate_format(:email, ~r/@/)
-    |> unique_constraint(:email)
     |> validate_length(:password, min: 8)
-    |> validate_format(
-      :password,
-      ~r/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*/,
-      message: "Must include at least one lowercase letter, one uppercase letter, and one digit"
-    )
-    |> generate_password_hash
+    |> validate_confirmation(:password)
+    |> unique_constraint(:email)
+    |> put_password_hash
   end
 
-  defp generate_password_hash(changeset) do
+  defp put_password_hash(changeset) do
     case changeset do
-      %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
-        put_change(changeset, :password_hash, Comeonin.Bcrypt.hashpwsalt(password))
+      %Ecto.Changeset{valid?: true, changes: %{password: pass}} ->
+        put_change(changeset, :password_hash, hashpwsalt(pass))
 
       _ ->
         changeset

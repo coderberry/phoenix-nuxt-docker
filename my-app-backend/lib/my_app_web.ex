@@ -22,20 +22,21 @@ defmodule MyAppWeb do
       use Phoenix.Controller, namespace: MyAppWeb
       import Plug.Conn
       import MyAppWeb.Router.Helpers
+      import MyAppWeb.Gettext
     end
   end
 
   def view do
     quote do
-      use Phoenix.View,
-        root: "lib/my_app_web/templates",
-        namespace: MyAppWeb
+      use Phoenix.View, root: "lib/my_app_web/templates",
+                        namespace: MyAppWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
 
       import MyAppWeb.Router.Helpers
       import MyAppWeb.ErrorHelpers
+      import MyAppWeb.Gettext
     end
   end
 
@@ -50,6 +51,7 @@ defmodule MyAppWeb do
   def channel do
     quote do
       use Phoenix.Channel
+      import MyAppWeb.Gettext
     end
   end
 

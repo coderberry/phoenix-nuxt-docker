@@ -11,11 +11,10 @@ defmodule MyAppWeb.UserView do
   end
 
   def render("user.json", %{user: user}) do
-    %{id: user.id,
-      email: user.email,
-      name: user.name,
-      phone: user.phone,
-      password_hash: user.password_hash,
-      is_admin: user.is_admin}
+    %{id: user.id, email: user.email, password_hash: user.password_hash}
+  end
+
+  def render("jwt.json", %{jwt: jwt}) do
+    %{jwt: jwt}
   end
 end

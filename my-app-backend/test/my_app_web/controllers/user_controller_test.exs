@@ -4,9 +4,9 @@ defmodule MyAppWeb.UserControllerTest do
   alias MyApp.Accounts
   alias MyApp.Accounts.User
 
-  @create_attrs %{email: "some email", is_admin: true, name: "some name", password_hash: "some password_hash", phone: "some phone"}
-  @update_attrs %{email: "some updated email", is_admin: false, name: "some updated name", password_hash: "some updated password_hash", phone: "some updated phone"}
-  @invalid_attrs %{email: nil, is_admin: nil, name: nil, password_hash: nil, phone: nil}
+  @create_attrs %{email: "some email", password_hash: "some password_hash"}
+  @update_attrs %{email: "some updated email", password_hash: "some updated password_hash"}
+  @invalid_attrs %{email: nil, password_hash: nil}
 
   def fixture(:user) do
     {:ok, user} = Accounts.create_user(@create_attrs)
@@ -33,10 +33,7 @@ defmodule MyAppWeb.UserControllerTest do
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "email" => "some email",
-        "is_admin" => true,
-        "name" => "some name",
-        "password_hash" => "some password_hash",
-        "phone" => "some phone"}
+        "password_hash" => "some password_hash"}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -56,10 +53,7 @@ defmodule MyAppWeb.UserControllerTest do
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "email" => "some updated email",
-        "is_admin" => false,
-        "name" => "some updated name",
-        "password_hash" => "some updated password_hash",
-        "phone" => "some updated phone"}
+        "password_hash" => "some updated password_hash"}
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do

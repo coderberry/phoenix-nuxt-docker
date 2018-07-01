@@ -33,7 +33,7 @@ defmodule MyAppWeb.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_my_app_key",
-    signing_salt: "MRxQp7IP"
+    signing_salt: "hsT0t71/"
 
   plug MyAppWeb.Router
 

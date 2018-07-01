@@ -1,22 +1,26 @@
 defmodule MyAppWeb.Router do
   use MyAppWeb, :router
 
+  alias MyApp.Guardian
+
   pipeline :api do
     plug(:accepts, ["json"])
-    plug(Guardian.Plug.VerifyHeader)
-    plug(Guardian.Plug.LoadResource)
   end
 
-  pipeline :authenticated do
-    plug(Guardian.Plug.EnsureAuthenticated)
+  pipeline :jwt_authenticated do
+    plug(Guardian.AuthPipeline)
   end
 
   scope "/api/v1", MyAppWeb do
     pipe_through(:api)
 
-    # restrict unauthenticated access for routes below
-    pipe_through(:authenticated)
+    post("/sign_up", UserController, :create)
+    post("/sign_in", UserController, :sign_in)
+  end
 
-    resources("/users", UserController, except: [:new, :edit])
+  scope "/api/v1", MyAppWeb do
+    pipe_through([:api, :jwt_authenticated])
+
+    get("/me", UserController, :show)
   end
 end
