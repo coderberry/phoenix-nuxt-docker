@@ -14,8 +14,8 @@ defmodule MyAppWeb.Router do
   scope "/api/v1", MyAppWeb do
     pipe_through(:api)
 
-    post("/sign_up", UserController, :create)
-    post("/sign_in", UserController, :sign_in)
+    post("/signup", UserController, :create)
+    post("/login", UserController, :sign_in)
   end
 
   scope "/api/v1", MyAppWeb do

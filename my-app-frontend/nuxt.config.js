@@ -29,15 +29,12 @@ module.exports = {
   /*
   ** Plugins to load before mounting the App
   */
-  plugins: [],
+  plugins: ["~/plugins/axios"],
 
   /*
   ** Nuxt.js modules
   */
-  modules: [
-    // Doc: https://github.com/nuxt-community/axios-module#usage
-    "@nuxtjs/axios"
-  ],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth"],
   /*
   ** Axios module configuration
   */
@@ -66,5 +63,20 @@ module.exports = {
         });
       }
     }
-  }
+  },
+
+  env: {
+    baseUrl: process.env.BASE_URL || "http://localhost:3000"
+  },
+
+  axios: {
+    credentials: true,
+    proxy: false,
+    debug: true,
+    host: "localhost",
+    port: 4000,
+    prefix: "/api/v1"
+  },
+
+  auth: {}
 };
